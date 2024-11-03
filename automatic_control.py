@@ -812,14 +812,40 @@ class CameraManager(object):
         inv_matrix = np.array(self.sensor.get_transform().get_inverse_matrix())
         sensor_gt_box = None
         sensor_det_box = None
-        if gt_bbox is not None:
-            reshape_gt_bbox = np.array(gt_bbox).reshape(-1, 3)
-            sensor_gt_box = Transform.transform_with_matrix(reshape_gt_bbox, inv_matrix) 
-            sensor_gt_box = np.array(sensor_gt_box).reshape(-1, gt_bbox.shape[1], 3)
-        if det_bbox is not None:
-            reshape_det_bbox = np.array(det_bbox).reshape(-1, 3)
-            sensor_det_box = Transform.transform_with_matrix(reshape_det_bbox, inv_matrix)
-            sensor_det_box = np.array(sensor_det_box).reshape(-1, det_bbox.shape[1], 3)
+
+        # Process ground truth boxes if they exist
+        if gt_bbox is not None and isinstance(gt_bbox, np.ndarray):
+            try:
+                # Get the number of boxes and points per box
+                num_boxes = len(gt_bbox)
+                points_per_box = gt_bbox.shape[1] if len(gt_bbox.shape) > 1 else 1
+                
+                # Reshape to (N*8, 3) for transformation
+                reshape_gt_bbox = gt_bbox.reshape(-1, 3)
+                sensor_gt_box = Transform.transform_with_matrix(reshape_gt_bbox, inv_matrix)
+                
+                # Reshape back to (N, 8, 3)
+                sensor_gt_box = np.array(sensor_gt_box).reshape(num_boxes, points_per_box, 3)
+            except (ValueError, AttributeError) as e:
+                print(f"Warning: Error processing ground truth boxes: {e}")
+                sensor_gt_box = None
+
+        # Process detection boxes if they exist
+        if det_bbox is not None and isinstance(det_bbox, np.ndarray):
+            try:
+                # Get the number of boxes and points per box
+                num_boxes = len(det_bbox)
+                points_per_box = det_bbox.shape[1] if len(det_bbox.shape) > 1 else 1
+                
+                # Reshape to (N*8, 3) for transformation
+                reshape_det_bbox = det_bbox.reshape(-1, 3)
+                sensor_det_box = Transform.transform_with_matrix(reshape_det_bbox, inv_matrix)
+                
+                # Reshape back to (N, 8, 3)
+                sensor_det_box = np.array(sensor_det_box).reshape(num_boxes, points_per_box, 3)
+            except (ValueError, AttributeError) as e:
+                print(f"Warning: Error processing detection boxes: {e}")
+                sensor_det_box = None
 
         if self.sensors[self.index][0].startswith('sensor.lidar'):
             points = np.frombuffer(image.raw_data, dtype=np.dtype('f4'))
@@ -830,21 +856,28 @@ class CameraManager(object):
             lidar_img = np.zeros(lidar_img_size)
             lidar_img[tuple(lidar_data.T)] = (255, 255, 255)
             self.surface = pygame.surfarray.make_surface(lidar_img)
-            # Draw Bbox on image
+            
+            # Draw Bbox on image only if valid boxes exist
             if sensor_gt_box is not None:
-                reshape_sensor_gt_box = np.array(sensor_gt_box).reshape(-1, 3)
-                lidar_gt_boxes = self.project_to_lidar_pygame(reshape_sensor_gt_box)
-                lidar_gt_boxes = np.array(lidar_gt_boxes).reshape(-1, sensor_gt_box.shape[1], 2)
-                PyGameDrawing.draw_bbox_in_pygame(self.surface, lidar_gt_boxes, color=(0, 255, 0))  # Green for ground truth
-            if sensor_det_box is not None:
-                reshape_sensor_det_box = np.array(sensor_det_box).reshape(-1, 3)
-                lidar_det_boxes = self.project_to_lidar_pygame(reshape_sensor_det_box)
-                lidar_det_boxes = np.array(lidar_det_boxes).reshape(-1, sensor_det_box.shape[1], 2)
-                PyGameDrawing.draw_bbox_in_pygame(self.surface, lidar_det_boxes, color=(255, 0, 0))  # Red for detections
+                try:
+                    reshape_sensor_gt_box = sensor_gt_box.reshape(-1, 3)
+                    lidar_gt_boxes = self.project_to_lidar_pygame(reshape_sensor_gt_box)
+                    lidar_gt_boxes = lidar_gt_boxes.reshape(-1, sensor_gt_box.shape[1], 2)
+                    PyGameDrawing.draw_bbox_in_pygame(self.surface, lidar_gt_boxes, color=(0, 255, 0))
+                except (ValueError, AttributeError) as e:
+                    print(f"Warning: Error drawing ground truth boxes: {e}")
 
+            if sensor_det_box is not None:
+                try:
+                    reshape_sensor_det_box = sensor_det_box.reshape(-1, 3)
+                    lidar_det_boxes = self.project_to_lidar_pygame(reshape_sensor_det_box)
+                    lidar_det_boxes = lidar_det_boxes.reshape(-1, sensor_det_box.shape[1], 2)
+                    PyGameDrawing.draw_bbox_in_pygame(self.surface, lidar_det_boxes, color=(255, 0, 0))
+                except (ValueError, AttributeError) as e:
+                    print(f"Warning: Error drawing detection boxes: {e}")
 
         else:
-            # Obtain bounging boxes in image plane            
+            # Camera sensor processing
             camera_gt_boxes = self.project_to_camera_pygame(sensor_gt_box) 
             camera_det_boxes = self.project_to_camera_pygame(sensor_det_box)
 
@@ -856,13 +889,11 @@ class CameraManager(object):
 
             self.surface = pygame.surfarray.make_surface(array.swapaxes(0, 1))
             
-            # pdb.set_trace()
-
-            # Draw Bbox on image
+            # Draw Bbox on image only if valid boxes exist
             if camera_gt_boxes is not None:
-                PyGameDrawing.draw_bbox_in_pygame(self.surface, camera_gt_boxes, color=(0, 255, 0))  # Green for ground truth
+                PyGameDrawing.draw_bbox_in_pygame(self.surface, camera_gt_boxes, color=(0, 255, 0))
             if camera_det_boxes is not None:
-                PyGameDrawing.draw_bbox_in_pygame(self.surface, camera_det_boxes, color=(255, 0, 0))  # Red for detections
+                PyGameDrawing.draw_bbox_in_pygame(self.surface, camera_det_boxes, color=(255, 0, 0))
 
         if self.recording:
             image.save_to_disk('_out/%08d' % image.frame)
