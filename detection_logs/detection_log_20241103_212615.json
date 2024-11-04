@@ -1,0 +1,11 @@
+{
+  "metadata": {
+    "start_time": "20241103_212615",
+    "device": "cuda",
+    "image_size": [
+      360,
+      640
+    ]
+  },
+  "detections": []
+}

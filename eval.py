@@ -71,13 +71,25 @@ def compute_iou(box, boxes):
     iou : np.ndarray
         Array of iou between box and boxes.
 
-    """
     # Calculate intersection areas
     # if np.any(np.array([box.union(b).area for b in boxes])==0):
     #     print('debug')
     iou = [box.intersection(b).area / box.union(b).area for b in boxes]
 
     return np.array(iou, dtype=np.float32)
+    """
+    iou = []
+    for idx, b in enumerate(boxes):
+        intersection_area = box.intersection(b).area
+        union_area = box.union(b).area
+        if union_area == 0:
+            iou_val = 0
+        else:
+            iou_val = intersection_area / union_area
+        iou.append(iou_val)
+        print(f"IoU between box and boxes[{idx}]: {iou_val}")
+    return np.array(iou, dtype=np.float32)
+
 
 def caluclate_tp_fp(det_boxes, det_score, gt_boxes, result_stat, iou_thresh):
     """
@@ -125,6 +137,11 @@ def caluclate_tp_fp(det_boxes, det_score, gt_boxes, result_stat, iou_thresh):
             gt_polygon_list.pop(gt_index)
 
         result_stat[iou_thresh]['score'] += det_score.tolist()
+    
+    print("Detected bounding boxes:", det_boxes)
+    print("Ground truth bounding boxes:", gt_boxes)
+    print("IoUs calculated:", ious)
+
 
     result_stat[iou_thresh]['fp'] += fp
     result_stat[iou_thresh]['tp'] += tp

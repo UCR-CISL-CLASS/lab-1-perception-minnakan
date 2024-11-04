@@ -1,0 +1,32 @@
+Collecting mmcv
+  Downloading mmcv-2.2.0.tar.gz (479 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 479.1/479.1 kB 7.7 MB/s eta 0:00:00
+  Preparing metadata (setup.py): started
+  Preparing metadata (setup.py): finished with status 'done'
+Requirement already satisfied: addict in /home/minnakan/carla_sim_2/carla/lib/python3.7/site-packages (from mmcv) (2.4.0)
+Requirement already satisfied: mmengine>=0.3.0 in /home/minnakan/carla_sim_2/carla/lib/python3.7/site-packages (from mmcv) (0.10.5)
+Requirement already satisfied: numpy in /home/minnakan/carla_sim_2/carla/lib/python3.7/site-packages (from mmcv) (1.19.5)
+Requirement already satisfied: packaging in /home/minnakan/carla_sim_2/carla/lib/python3.7/site-packages (from mmcv) (24.0)
+Requirement already satisfied: Pillow in /home/minnakan/carla_sim_2/carla/lib/python3.7/site-packages (from mmcv) (9.5.0)
+Requirement already satisfied: pyyaml in /home/minnakan/carla_sim_2/carla/lib/python3.7/site-packages (from mmcv) (6.0.1)
+Requirement already satisfied: yapf in /home/minnakan/carla_sim_2/carla/lib/python3.7/site-packages (from mmcv) (0.40.2)
+Requirement already satisfied: matplotlib in /home/minnakan/carla_sim_2/carla/lib/python3.7/site-packages (from mmengine>=0.3.0->mmcv) (3.5.2)
+Requirement already satisfied: termcolor in /home/minnakan/carla_sim_2/carla/lib/python3.7/site-packages (from mmengine>=0.3.0->mmcv) (1.1.0)
+Requirement already satisfied: opencv-python>=3 in /home/minnakan/carla_sim_2/carla/lib/python3.7/site-packages (from mmengine>=0.3.0->mmcv) (4.10.0.84)
+Requirement already satisfied: rich in /home/minnakan/carla_sim_2/carla/lib/python3.7/site-packages (from mmengine>=0.3.0->mmcv) (13.8.1)
+Requirement already satisfied: platformdirs>=3.5.1 in /home/minnakan/carla_sim_2/carla/lib/python3.7/site-packages (from yapf->mmcv) (4.0.0)
+Requirement already satisfied: importlib-metadata>=6.6.0 in /home/minnakan/carla_sim_2/carla/lib/python3.7/site-packages (from yapf->mmcv) (6.7.0)
+Requirement already satisfied: tomli>=2.0.1 in /home/minnakan/carla_sim_2/carla/lib/python3.7/site-packages (from yapf->mmcv) (2.0.1)
+Requirement already satisfied: typing-extensions>=3.6.4 in /home/minnakan/carla_sim_2/carla/lib/python3.7/site-packages (from importlib-metadata>=6.6.0->yapf->mmcv) (4.7.1)
+Requirement already satisfied: zipp>=0.5 in /home/minnakan/carla_sim_2/carla/lib/python3.7/site-packages (from importlib-metadata>=6.6.0->yapf->mmcv) (3.15.0)
+Requirement already satisfied: fonttools>=4.22.0 in /home/minnakan/carla_sim_2/carla/lib/python3.7/site-packages (from matplotlib->mmengine>=0.3.0->mmcv) (4.38.0)
+Requirement already satisfied: cycler>=0.10 in /home/minnakan/carla_sim_2/carla/lib/python3.7/site-packages (from matplotlib->mmengine>=0.3.0->mmcv) (0.11.0)
+Requirement already satisfied: python-dateutil>=2.7 in /home/minnakan/carla_sim_2/carla/lib/python3.7/site-packages (from matplotlib->mmengine>=0.3.0->mmcv) (2.9.0.post0)
+Requirement already satisfied: kiwisolver>=1.0.1 in /home/minnakan/carla_sim_2/carla/lib/python3.7/site-packages (from matplotlib->mmengine>=0.3.0->mmcv) (1.4.5)
+Requirement already satisfied: pyparsing>=2.2.1 in /home/minnakan/carla_sim_2/carla/lib/python3.7/site-packages (from matplotlib->mmengine>=0.3.0->mmcv) (3.1.4)
+Requirement already satisfied: pygments<3.0.0,>=2.13.0 in /home/minnakan/carla_sim_2/carla/lib/python3.7/site-packages (from rich->mmengine>=0.3.0->mmcv) (2.17.2)
+Requirement already satisfied: markdown-it-py>=2.2.0 in /home/minnakan/carla_sim_2/carla/lib/python3.7/site-packages (from rich->mmengine>=0.3.0->mmcv) (2.2.0)
+Requirement already satisfied: mdurl~=0.1 in /home/minnakan/carla_sim_2/carla/lib/python3.7/site-packages (from markdown-it-py>=2.2.0->rich->mmengine>=0.3.0->mmcv) (0.1.2)
+Requirement already satisfied: six>=1.5 in /home/minnakan/carla_sim_2/carla/lib/python3.7/site-packages (from python-dateutil>=2.7->matplotlib->mmengine>=0.3.0->mmcv) (1.15.0)
+Building wheels for collected packages: mmcv
+  Building wheel for mmcv (setup.py): started

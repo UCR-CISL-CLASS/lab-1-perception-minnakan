@@ -60,7 +60,8 @@ import carla
 from carla import ColorConverter as cc
 
 from agents.navigation.behavior_agent import BehaviorAgent  # pylint: disable=import-error
-from agents.navigation.basic_agent import BasicAgent  # pylint: disable=import-error
+from basic_agent_with_detector import BasicAgent
+#from agents.navigation.basic_agent import BasicAgent  # pylint: disable=import-error
 from agents.navigation.constant_velocity_agent import ConstantVelocityAgent  # pylint: disable=import-error
 from agents.navigation.agent_wrapper import AgentWrapper  # pylint: disable=import-error
 
